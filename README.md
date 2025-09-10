@@ -5,9 +5,10 @@
 
 
 ### Envs required
- - CLIENT_RECONNECTION_TIMEOUT=<value in seconds>
- - RMQ_HOST=<rabbit mq host>
- - SESSION_ID=<queue name to which consumer connects>
+ - CLIENT_RECONNECTION_TIMEOUT=<value in seconds \>
+ - RMQ_HOST=<rabbit mq host \>
+ - SESSION_ID=<queue name to which consumer connects \>
+ - GCS_BUCKET_NAME=<bucket name on gcs \>
 
 ### Tests with grpcurl
 
