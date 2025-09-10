@@ -11,11 +11,10 @@ def run():
         # Start streaming
         request = events_pb2.StreamRequest()
         fix_request = events_pb2.FixRequest()
+        stub.RequestFix(fix_request)
         try:
             for event in stub.StreamEvents(request):
                 print(event)
-            resp = stub.RequestFix(fix_request)
-            print(resp)
         except grpc.RpcError as e:
             print(e)
 
