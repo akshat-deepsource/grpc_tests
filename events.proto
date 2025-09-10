@@ -1,0 +1,116 @@
+syntax = "proto3";
+
+package events;
+
+option go_package = "github.com/DeepSourceCorp/fjord/proto";
+
+import "google/protobuf/timestamp.proto";
+
+service EventService {
+  rpc StreamEvents(StreamRequest) returns (stream Event);
+  rpc RequestFix(FixRequest) returns (FixResponse);
+}
+
+service TelemetryService {
+  rpc RecordFixDecision(FixDecisionTelemetry) returns (TelemetryResponse);
+}
+
+message StreamRequest {
+}
+
+message Event {
+  string type = 1;
+  oneof data {
+    Review review = 2;
+    Logstream logstream = 3;
+    ErrorData error = 4;
+  }
+  google.protobuf.Timestamp timestamp = 5;
+}
+
+message Review {
+  repeated Issue issues = 1;
+}
+
+message Issue {
+  string short_explanation = 1;
+  string long_explanation = 2;
+  repeated FileLocation file_locations = 3;
+  string fix_steps = 4;
+  IssueType type = 5;
+}
+
+message FileLocation {
+  string file = 1;
+  int32 start_line = 2;
+  int32 end_line = 3;
+}
+
+enum IssueType {
+  DEPENDENCY = 0;
+  SECURITY = 1;
+  SECRET = 2;
+}
+
+message FixRequest {
+  Issue issue = 1;
+  string user_comment = 2;
+}
+
+message FixResponse {
+  string short_explanation = 1;
+  string long_explanation = 2;
+  string patch = 3;
+}
+
+enum LogstreamLevel {
+  INFO = 0;
+  WARNING = 1;
+  ERROR = 2;
+  DEBUG = 3;
+}
+
+message Logstream {
+  string guid = 1;
+  LogstreamLevel level = 2;
+  string message = 3;
+  string timestamp = 4;
+}
+
+message ErrorData {
+  string message = 1;
+  string code = 2;
+  string details = 3;
+}
+
+message FixDecisionTelemetry {
+  Issue issue = 1;
+  FixDecisionType decision = 2;
+  string user_feedback = 3;
+  repeated FileContext file_contexts = 4;
+  string repository = 5;
+  string base_commit_hash = 6;
+  bool has_uncommitted_changes = 7;
+  google.protobuf.Timestamp timestamp = 8;
+}
+
+enum FixDecisionType {
+  ACCEPT = 0;
+  REJECT = 1;
+  REQUEST_CHANGES = 2;
+}
+
+message FileContext {
+  string file_path = 1;
+  string content = 2;
+  repeated LineRange affected_lines = 3;
+}
+
+message LineRange {
+  int32 start_line = 1;
+  int32 end_line = 2;
+}
+
+message TelemetryResponse {
+  bool success = 1;
+}
