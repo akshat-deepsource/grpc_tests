@@ -2,8 +2,9 @@ import grpc
 import events_pb2
 import events_pb2_grpc
 
+
 def run():
-                        # Connect to your server
+    # Connect to your server
     with grpc.insecure_channel("localhost:50051") as channel:
         stub = events_pb2_grpc.EventServiceStub(channel)
         stub2 = events_pb2_grpc.TelemetryServiceStub(channel)
@@ -18,10 +19,7 @@ def run():
         except grpc.RpcError as e:
             print(e)
 
+
 if __name__ == "__main__":
 
-
-
-    
     run()
-
