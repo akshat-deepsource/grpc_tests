@@ -4,7 +4,18 @@ connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 channel = connection.channel()
 
 # make sure the queue exists
+
+
+
+
+
+
+
+
+
+
 channel.queue_declare(queue='hello')
+
 
 rmq_analyzer_task_message_json = """{
     "id": "task_12345",
